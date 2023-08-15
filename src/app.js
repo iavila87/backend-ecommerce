@@ -3,7 +3,7 @@ import express from 'express'
 /** Inicializacion de express */
 const app = express();
 
-/* Routes */
+/* Routers */
 
 
 /** Levanto el servidor para que escuche en el puerto 8080 */
