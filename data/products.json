@@ -1,5 +1,5 @@
 [
-    {
+	{
 		"id": 1,
 		"title": "Producto 1",
 		"description": "Descripcion del producto 1",
@@ -8,16 +8,16 @@
 		"code": "P001",
 		"stock": 29
 	},
-    {
+	{
 		"id": 2,
-		"title": "Producto 2",
-		"description": "Descripcion del producto 2",
-		"price": 850,
+		"title": "Producto 002",
+		"description": "Descripcion del producto 002",
+		"price": 2790,
 		"thumbnail": "Sin imagen",
-		"code": "P002",
-		"stock": 253
+		"code": "P02",
+		"stock": 36
 	},
-    {
+	{
 		"id": 3,
 		"title": "Producto 3",
 		"description": "Descripcion del producto 3",
@@ -26,7 +26,7 @@
 		"code": "P003",
 		"stock": 205
 	},
-    {
+	{
 		"id": 4,
 		"title": "Producto 4",
 		"description": "Descripcion del producto 4",
@@ -35,7 +35,7 @@
 		"code": "P004",
 		"stock": 140
 	},
-    {
+	{
 		"id": 5,
 		"title": "Producto 5",
 		"description": "Descripcion del producto 5",
@@ -44,7 +44,7 @@
 		"code": "P005",
 		"stock": 65
 	},
-    {
+	{
 		"id": 6,
 		"title": "Producto 6",
 		"description": "Descripcion del producto 6",
@@ -53,7 +53,7 @@
 		"code": "P006",
 		"stock": 99
 	},
-    {
+	{
 		"id": 7,
 		"title": "Producto 7",
 		"description": "Descripcion del producto 7",
@@ -62,7 +62,7 @@
 		"code": "P007",
 		"stock": 74
 	},
-    {
+	{
 		"id": 8,
 		"title": "Producto 8",
 		"description": "Descripcion del producto 8",
@@ -71,7 +71,7 @@
 		"code": "P008",
 		"stock": 78
 	},
-    {
+	{
 		"id": 9,
 		"title": "Producto 9",
 		"description": "Descripcion del producto 9",
@@ -80,7 +80,7 @@
 		"code": "P009",
 		"stock": 150
 	},
-    {
+	{
 		"id": 10,
 		"title": "Producto 10",
 		"description": "Descripcion del producto 10",
