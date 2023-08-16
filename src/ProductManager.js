@@ -69,7 +69,9 @@ class ProductManager {
 
     async addProduct(product){
         
-        let isNull = !product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock;
+        let isNull = !product.title || !product.description || 
+                     !product.price || !product.thumbnails || 
+                     !product.code || !product.stock || !product.category;
         if(isNull) return 'Error - Data error';
         
         if(!this.#fileExists()) return 'Error - File error';

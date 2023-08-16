@@ -39,12 +39,13 @@ router.get('/:pid', async (req, res) =>{
 
 /** Metodo POST */
 router.post('/', async (req, res) => {
+    
     const newProduct = await pm.addProduct(req.body);
     
     if(typeof newProduct == 'string'){
-        // ver que error enviar
         return res.status(404).send( { status: "error", error: newProduct.split(' ').slice(2).join(' ') } );
     }
+    newProduct.status = true;
     res.status(201).send( { status: "success", payload: newProduct } );
 });
 

@@ -1,9 +1,6 @@
 import { Router } from "express";
 import CartManager from '../CartManager.js'
-import ProductManager from '../ProductManager.js'
 
-/** Inicializacion de ProductManager */
-const pm = new ProductManager('./data/products.json');
 /** Inicializacion de CartManager */
 const cm = new CartManager('./data/carts.json');
 
@@ -15,8 +12,7 @@ router.post('/', async (req, res) => {
     const newCart = await cm.createCart();
     
     if(typeof newCart == 'string'){
-        // ver que error enviar
-        return res.status(404).send( { status: "error", error: newCart.split(' ').slice(2).join(' ') } );
+        return res.status(500).send( { status: "error", error: newCart.split(' ').slice(2).join(' ') } );
     }
     res.status(201).send( { status: "success", payload: newCart } );
 });
@@ -30,7 +26,6 @@ router.post('/:cid/product/:pid', async (req, res) => {
     const addProduct = await cm.addProductCartById(cid, pid);
 
     if(typeof addProduct == 'string'){
-        // ver que error enviar
         return res.status(404).send( { status: "error", error: addProduct.split(' ').slice(2).join(' ') } );
     }
 
@@ -43,12 +38,12 @@ router.post('/:cid/product/:pid', async (req, res) => {
 router.get('/:cid', async (req, res) =>{
 
     const id = parseInt(req.params.cid);
-    const cart = await pm.getCartById(id);
+    const cart = await cm.getCartById(id);
 
     if(typeof cart == 'string'){
         return res.status(404).send( { status: "error", error: cart.split(' ').slice(2).join(' ') } );
     }
-    res.status(200).send( { status: "success", payload: cart } );
+    res.status(200).send( { status: "success", payload: cart.products } );
 });
 
 export default router;

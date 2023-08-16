@@ -4,7 +4,7 @@ import ProductManager from './ProductManager.js';
  * Cart : 
  * {
 		"id": 1,
-		"products": [producto1, producto2"]
+		"products": [ {product: 1 , quantity: 1}, {product: 2 , quantity: 4}"]
 	}
  */
 
@@ -107,14 +107,14 @@ class CartManager {
 
 const test = async () => {
     const cm = new CartManager('./data/carts.json');
-    //console.log("create cart 1");
-    //console.log(await cm.createCart());
+    console.log("create cart 1");
+    console.log(await cm.createCart());
     console.log("get cart by Id");
     console.log(await cm.getCartById(3));
     console.log("add product 1");
     console.log(await cm.addProductCartById(2,9));
 }
 
-test();
+//test();
 
 export default CartManager
