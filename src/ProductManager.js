@@ -1,4 +1,19 @@
 import fs from 'fs'
+
+/**
+ * Product : 
+ * {
+		"id": 1,
+		"title": "Producto 1",
+		"description": "Descripcion del producto 1",
+		"code": "P001",
+		"price": 790,
+		"status": true,
+		"stock": 29,
+		"category": "categoria A",
+		"thumbnails": ["Sin imagen 1", "Sin imagen 2"]
+	}
+ */
  
 class ProductManager {
 

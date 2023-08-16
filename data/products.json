@@ -3,10 +3,12 @@
 		"id": 1,
 		"title": "Producto 1",
 		"description": "Descripcion del producto 1",
-		"price": 790,
-		"thumbnail": "Sin imagen",
 		"code": "P001",
-		"stock": 29
+		"price": 790,
+		"status": true,
+		"stock": 29,
+		"category": "categoria A",
+		"thumbnails": ["Sin imagen"]
 	},
 	{
 		"id": 2,
