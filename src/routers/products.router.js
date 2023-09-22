@@ -1,5 +1,6 @@
 import { Router } from "express";
-import ProductManager from '../ProductManager.js'
+import ProductManager from '../dao/ProductManager.js'
+import productsModel from "../dao/models/products.model.js" 
 
 /** Inicializacion de ProductManager */
 const pm = new ProductManager('./data/products.json');
@@ -10,67 +11,106 @@ const router = Router();
 /** get 'api/products' y 'api/products?limit='*/
 router.get('/', async (req, res) =>{
 
-    const limit = req.query.limit;
-    const products = await pm.getProducts();
+    const limit = parseInt(req.query.limit);
+    /** Acceso por archivo
+        const products = await pm.getProducts();
+    */
+    /** Acceso por Mongoose */
+    try{
+        if(limit) {
+            const products = await productsModel.find().limit(limit);
+            return res.status(200).send( {status: "success", payload: products } );
+        }
 
-    if(typeof products == 'string') {
-        return res.status(404).send( { status: "error", error: products.split(' ').slice(2).join(' ') } );
+        const products = await productsModel.find();
+        /* 
+        if(typeof products == 'string') {
+            return res.status(404).send( { status: "error", error: products.split(' ').slice(2).join(' ') } );
+        }*/
+        res.status(200).send( {status: "success", payload: products } );
     }
-
-    if(!limit) {
-        return res.status(200).send( {status: "success", payload: products } );
+    catch(error){
+        console.log("error de mongoose: "+error);
     }
-
-    res.status(200).send( {status: "success", payload: products.slice(0,limit) } );
 });
 
 /** get 'api/products/:pid' */
 router.get('/:pid', async (req, res) =>{
 
-    const id = parseInt(req.params.pid);
-    const product = await pm.getProductById(id);
-
-    if(typeof product !== 'string'){
+    const id = req.params.pid;
+    /** por filesystem */
+    //const product = await pm.getProductById(id);
+    try{
+        /** por mongoose */
+        const product = await productsModel.find({_id:id});
+        /*if(typeof product == 'string'){
+            res.status(404).send( { status: "error", error: product.split(' ').slice(2).join(' ') } );
+        }*/
         return res.status(200).send( { status: "success", payload: product } );
+    }catch(error){
+        console.log("error: "+ error )
     }
-
-    res.status(404).send( { status: "error", error: product.split(' ').slice(2).join(' ') } );
 });
 
 /** Metodo POST */
 router.post('/', async (req, res) => {
-    
-    const newProduct = await pm.addProduct(req.body);
-    
-    if(typeof newProduct == 'string'){
-        return res.status(404).send( { status: "error", error: newProduct.split(' ').slice(2).join(' ') } );
+    /** por archivo */
+    //const newProduct = await pm.addProduct(req.body);
+    /** por mongoose */
+    try{
+        const newProduct = req.body;
+        newProduct.status = true;
+        const generatedProduct = new productsModel(newProduct);
+        await generatedProduct.save();
+        // res.redirect('/'); redirecciona a la vista raiz
+        /*if(typeof newProduct == 'string'){
+            return res.status(404).send( { status: "error", error: newProduct.split(' ').slice(2).join(' ') } );
+        }*/
+        res.status(201).send( { status: "success", payload: generatedProduct } );
+    }catch(error){
+        console.log("error: " + error);
     }
-    newProduct.status = true;
-    res.status(201).send( { status: "success", payload: newProduct } );
 });
 
 /** Metodo PUT */
 router.put('/:pid', async (req, res) =>{
 
-    const id = parseInt(req.params.pid);
-    const product = await pm.updateProduct(id, req.body);
+    const id = req.params.pid;
+    const updateProduct = req.body;
+    /** por archivo */
+    //const product = await pm.updateProduct(id, req.body);
+    /** por mongoose */
+    try{
+        const product = await productsModel.updateOne({_id:id}, updateProduct);
+        /*
+        if(typeof product == 'string'){
+            return res.status(404).send( { status: "error", error: product.split(' ').slice(2).join(' ') } );
+        }*/
+        res.status(200).send( { status: "success", payload: product } );
 
-    if(typeof product == 'string'){
-        return res.status(404).send( { status: "error", error: product.split(' ').slice(2).join(' ') } );
+    }catch(error){
+        console.log("error: "+error);
     }
-    res.status(200).send( { status: "success", payload: product } );
 });
 
 /** Metodo DELETE */
 router.delete('/:pid', async (req, res) =>{
 
-    const id = parseInt(req.params.pid);
-    const products = await pm.deleteProduct(id);
-
-    if(typeof products == 'string'){
-        return res.status(404).send( { status: "error", error: products.split(' ').slice(2).join(' ') } );
+    const id = req.params.pid;
+    /** por archivo */
+    //const products = await pm.deleteProduct(id);
+    /** por mongoose */
+    try{
+        const deleteProduct = await productsModel.deleteOne({_id:id});
+        const products = productsModel.find();
+        /*
+        if(typeof products == 'string'){
+            return res.status(404).send( { status: "error", error: products.split(' ').slice(2).join(' ') } );
+        }*/
+        res.status(200).send( { status: "success", payload: products } );
+    }catch(error){
+        console.log("error: "+error);
     }
-    res.status(200).send( { status: "success", payload: products } );
 });
 
 export default router;

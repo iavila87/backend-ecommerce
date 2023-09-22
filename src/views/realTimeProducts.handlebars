@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    
+    <div class="row">
+        <div class="col-6">
+            <h1>Productos por WebSocket</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-9">
+            {{#if emptyProducts}}
+                <p>No hay productos en el inventario</p>
+            {{else}}
+                <table class="table table-striped" id="tablaProductos">
+                    <tr>
+                        <td></td>
+                        <td>Codigo</td>
+                        <td>Nombre</td>
+                        <td>Descripcion</td>
+                        <td>Precio</td>
+                        <td>Cantidad</td>
+                        <td>Categoria</td>
+                        <td>Imagenes</td>
+                    </tr>
+                    {{#each products}}
+                    <tr>
+                        <td><button class="btn btn-primary" onclick="deleteProduct({{this.id}})">Eliminar</button></td>
+                        <td>{{this.code}}</td>
+                        <td>{{this.title}}</td>
+                        <td>{{this.description}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.stock}}</td>
+                        <td>{{this.category}}</td>
+                        <td>{{this.thumbnails.[0]}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+            {{/if}}
+        </div>
+        <div class="col-3">
+            <div>
+                <form class="d-flex flex-column mb-3 p-2 border rounded" id="formCreateProduct">
+                    <p class="mb-1">Codigo:</p>
+                    <input type="text" name="txtCodigo" id="txtCodigo">
+                    <p class="mb-1">Titulo:</p>
+                    <input type="text" name="txtTitulo" id="txtTitulo">
+                    <p class="mb-1">Descripcion:</p>
+                    <input type="text" name="txtDescripcion" id="txtDescripcion">
+                    <p class="mb-1">Precio:</p>
+                    <input type="text" name="txtPrecio" id="txtPrecio">
+                    <p class="mb-1">Stock:</p>
+                    <input type="text" name="txtStock" id="txtStock">
+                    <p class="mb-1">Categoria:</p>
+                    <input type="text" name="txtCategoria" id="txtCategoria">
+                </form>
+                <button id="btnCreate" class="btn btn-primary">Crear Producto</button>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src='/js/realTimeProducts.js'></script>
