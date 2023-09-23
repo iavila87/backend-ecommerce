@@ -11,26 +11,53 @@ const router = Router();
 /** get 'api/products' y 'api/products?limit='*/
 router.get('/', async (req, res) =>{
 
-    const limit = parseInt(req.query.limit);
+    /* const limit contiene el valor del queryparam(limit)
+    en caso de que este no exista por defecto se le asigna 10 */
+    const limit = req.query.limit || 10;
+    /* const page contiene el valor del queryparam(page)
+    en caso de que este no exista por defecto se le asigna 1 */
+    const page = req.query.page || 1;
+    const filters = {};
+    if(req.query.category)  filters.category = req.query.category;
+    if(req.query.stock)     filters.stock = req.query.stock;
+    
+    /** paginacion */
+    
+    /* *********** */
+
     /** Acceso por archivo
         const products = await pm.getProducts();
     */
     /** Acceso por Mongoose */
     try{
-        if(limit) {
-            const products = await productsModel.find().limit(limit);
-            return res.status(200).send( {status: "success", payload: products } );
-        }
-
-        const products = await productsModel.find();
-        /* 
-        if(typeof products == 'string') {
-            return res.status(404).send( { status: "error", error: products.split(' ').slice(2).join(' ') } );
-        }*/
-        res.status(200).send( {status: "success", payload: products } );
+        const products = await productsModel.find().limit(limit);
+        return res.status(200).send( { 
+            status:'success',
+            payload: products,
+            totalPages: 1,
+            prevPage: null,
+            nextPage: null,
+            page: 1,
+            hasPrevPage: false,
+            hasNextPage: false,
+            prevLink: null,
+            nextLink: null
+        });
     }
     catch(error){
-        console.log("error de mongoose: "+error);
+        console.log("error: " + error);
+        return res.status(404).send( {
+            status: "error",
+            error: error.message,
+            totalPages: 1,
+            prevPage: null,
+            nextPage: null,
+            page: 1,
+            hasPrevPage: false,
+            hasNextPage: false,
+            prevLink: null,
+            nextLink: null 
+        });
     }
 });
 
@@ -43,12 +70,10 @@ router.get('/:pid', async (req, res) =>{
     try{
         /** por mongoose */
         const product = await productsModel.find({_id:id});
-        /*if(typeof product == 'string'){
-            res.status(404).send( { status: "error", error: product.split(' ').slice(2).join(' ') } );
-        }*/
         return res.status(200).send( { status: "success", payload: product } );
     }catch(error){
         console.log("error: "+ error )
+        res.status(404).send( { status: "error", error: error.message } );
     }
 });
 
@@ -63,12 +88,10 @@ router.post('/', async (req, res) => {
         const generatedProduct = new productsModel(newProduct);
         await generatedProduct.save();
         // res.redirect('/'); redirecciona a la vista raiz
-        /*if(typeof newProduct == 'string'){
-            return res.status(404).send( { status: "error", error: newProduct.split(' ').slice(2).join(' ') } );
-        }*/
         res.status(201).send( { status: "success", payload: generatedProduct } );
     }catch(error){
         console.log("error: " + error);
+        return res.status(404).send( { status: "error", error: error.message } );
     }
 });
 
@@ -82,14 +105,10 @@ router.put('/:pid', async (req, res) =>{
     /** por mongoose */
     try{
         const product = await productsModel.updateOne({_id:id}, updateProduct);
-        /*
-        if(typeof product == 'string'){
-            return res.status(404).send( { status: "error", error: product.split(' ').slice(2).join(' ') } );
-        }*/
         res.status(200).send( { status: "success", payload: product } );
-
     }catch(error){
         console.log("error: "+error);
+        return res.status(404).send( { status: "error", error: error.message } );
     }
 });
 
@@ -101,16 +120,32 @@ router.delete('/:pid', async (req, res) =>{
     //const products = await pm.deleteProduct(id);
     /** por mongoose */
     try{
-        const deleteProduct = await productsModel.deleteOne({_id:id});
+        await productsModel.deleteOne({_id:id});
         const products = productsModel.find();
-        /*
-        if(typeof products == 'string'){
-            return res.status(404).send( { status: "error", error: products.split(' ').slice(2).join(' ') } );
-        }*/
+
         res.status(200).send( { status: "success", payload: products } );
     }catch(error){
         console.log("error: "+error);
+        return res.status(404).send( { status: "error", error: error.message } );
     }
 });
 
 export default router;
+/*
+{
+    status:success/error
+    payload: Resultado de los productos solicitados
+    totalPages: Total de páginas
+    prevPage: Página anterior
+    nextPage: Página siguiente
+    page: Página actual
+    hasPrevPage: Indicador para saber si la página
+    previa existe
+    hasNextPage: Indicador para saber si la página
+    siguiente existe.
+    prevLink: Link directo a la página previa (null si
+    hasPrevPage=false)
+    nextLink: Link directo a la página siguiente (null si
+    hasNextPage=false)
+}
+*/
