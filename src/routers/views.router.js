@@ -12,7 +12,6 @@ router.get('/', async (req, res) => {
     // const products = await pm.getProducts();
     
     // consulta productos por Mongoose
-    
     const products = await productsModel.find().lean().exec();
     
     const emptyProducts = typeof products == 'string' || products.length == 0;
