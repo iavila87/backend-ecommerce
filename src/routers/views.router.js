@@ -49,5 +49,28 @@ router.get('/chat', async (req, res) => {
     });     // renderiza el home.handlebars en main.handlebars
 });
 
+// products
+router.get('/products', async (req, res) => {
+    
+    const products = await productsModel.find().lean().exec();
+    const emptyProducts = typeof products == 'string' || products.length == 0;
+
+    res.render('home', { // como segundo argumento le paso argumentos como objetos
+        emptyProducts,
+        products
+    });     // renderiza el home.handlebars en main.handlebars
+});
+
+// carts
+router.get('/carts/:cid', async (req, res) => {
+    
+    //const products = await productsModel.find().lean().exec();
+    //const emptyProducts = typeof products == 'string' || products.length == 0;
+
+    res.render('carts', { // como segundo argumento le paso argumentos como objetos
+        //emptyProducts,
+        //products
+    });     // renderiza el home.handlebars en main.handlebars
+});
 
 export default router
