@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ProductManager from '../dao/ProductManager.js'
 import productsModel from "../dao/models/products.model.js" 
+import { paginate } from "mongoose-paginate-v2";
 
 /** Inicializacion de ProductManager */
 const pm = new ProductManager('./data/products.json');
@@ -20,44 +21,50 @@ router.get('/', async (req, res) =>{
     const filters = {};
     if(req.query.category)  filters.category = req.query.category;
     if(req.query.stock)     filters.stock = req.query.stock;
-    
     /** paginacion */
-    
-    /* *********** */
+    const paginateOptions = { lean:true, limit, page };
+    if(req.query.sort === 'asc') paginateOptions.sort = {price : 1};
+    if(req.query.sort === 'desc') paginateOptions.sort = {price : -1};
 
+    try{
+        const products = await productsModel.paginate( filters, paginateOptions );
+        
+        let prevLink;
+        if(!req.query.page){
+            prevLink = `http://${req.hostname}:8080${req.originalUrl}&page=${products.prevPage}`;
+        }else{
+            const urlMod = req.originalUrl.replace(`page=${req.query.page}`,`page=${products.prevPage}`);
+            prevLink = `http://${req.hostname}:8080${urlMod}`;
+        }
+
+        let nextLink;
+        if(!req.query.page){
+            nextLink = `http://${req.hostname}:8080${req.originalUrl}&page=${products.nextPage}`;
+        }else{
+            const urlMod = req.originalUrl.replace(`page=${req.query.page}`,`page=${products.nextPage}`);
+            nextLink = `http://${req.hostname}:8080${urlMod}`;
+
+        }
+    /* *********** */
     /** Acceso por archivo
         const products = await pm.getProducts();
     */
-    /** Acceso por Mongoose */
-    try{
-        const products = await productsModel.find().limit(limit);
         return res.status(200).send( { 
             status:'success',
-            payload: products,
-            totalPages: 1,
-            prevPage: null,
-            nextPage: null,
-            page: 1,
-            hasPrevPage: false,
-            hasNextPage: false,
-            prevLink: null,
-            nextLink: null
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.prevPage,
+            nextPage: products.nextPage,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.prevLink ? prevLink : null,
+            nextLink: products.nextLink ? nextLink : null
         });
     }
     catch(error){
         console.log("error: " + error);
-        return res.status(404).send( {
-            status: "error",
-            error: error.message,
-            totalPages: 1,
-            prevPage: null,
-            nextPage: null,
-            page: 1,
-            hasPrevPage: false,
-            hasNextPage: false,
-            prevLink: null,
-            nextLink: null 
-        });
+        return res.status(500).send( { status: "error", error: error.message } );
     }
 });
 

@@ -40,14 +40,15 @@ router.post('/:cid/product/:pid', async (req, res) => {
     try{
         const cart = await cartsModel.findOne({_id:cid}).lean().exec();
         const product = await productsModel.find({_id:pid});
-        
+        console.log("cart " + JSON.stringify(cart))
+
         const addProduct = cart.products.find(item => item.product == pid);
-        
+        console.log("addProduct " + JSON.stringify(addProduct));
         if(!addProduct){
                 cart.products.push({ product: pid, quantity: 1 });
         }else{
             cart.products.forEach(pitem =>{
-                if(pitem.product === pid){
+                if(pitem.product == pid){
                     pitem.quantity++;
                 }
             });
@@ -55,14 +56,10 @@ router.post('/:cid/product/:pid', async (req, res) => {
 
         const updateCart = await cartsModel.updateOne({_id:cid}, cart);
 
-
-        /*if(typeof addProduct == 'string'){
-            return res.status(404).send( { status: "error", error: addProduct.split(' ').slice(2).join(' ') } );
-        }*/
-
         res.status(201).send( { status: "success", payload: cart } );
     }catch(error){
         console.log('error: '+error);
+        res.status(500).send( { status: "error", error: error.message } );
     }
 });
 
@@ -84,6 +81,8 @@ router.get('/:cid', async (req, res) =>{
         res.status(200).send( { status: "success", payload: cart.products } );
     }catch(error){
         console.log("error: "+error)
+        return res.status(500).send( { status: "error", error: error.message } );
+
     }
 });
 

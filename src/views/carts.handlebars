@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h1>Carrito de Compras ID: {{cart._id}}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            {{#if emptyProducts}}
+                <p>No hay productos en el inventario</p>
+            {{else}}
+                <table class="table table-striped">
+                    <tr>
+                        <td></td>
+                        <td>Codigo</td>
+                        <td>Nombre</td>
+                        <td>Precio</td>
+                        <td>Cantidad</td>
+                    </tr>
+                    {{#each cart.products}}
+                    <tr>
+                        <td></td>
+                        <td>{{this.product.code}}</td>
+                        <td>{{this.product.title}}</td>
+                        <td>{{this.product.price}}</td>
+                        <td>{{this.quantity}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+            {{/if}}
+        </div>
+    </div>
+    
+</div>
+
+<!--<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src='/js/home.js'></script>-->

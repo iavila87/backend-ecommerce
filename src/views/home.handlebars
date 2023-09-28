@@ -1,5 +1,19 @@
 <div class="container">
-        
+    <div class="row">
+        <div class="col-12">
+            {{#if paginateInfo.hasPrevPage}}
+                <a href="{{paginate.prevLink}}">Anterior</a>
+            {{/if}}
+            
+            {{#each paginateInfo.totalPages}}
+                <a href="{{this.link}}">{{this.page}}</a>
+            {{/each}}            
+            
+            {{#if paginateInfo.hasNextPage}}
+                <a href="{{paginate.nextLink}}">Siguiente</a>
+            {{/if}}
+        </div>
+    </div>
     <div class="row">
         <div class="col-6">
             <h1>Productos</h1>

@@ -7,12 +7,14 @@ addProductToCart = (pid) => {
     })
     .then(result => result.json())
     .then(result => {
+        //console.log("llego el cart "+ JSON.stringify(result));
         if(result.status === 'error') throw new Error(result.error);
 
+        //console.log('result.payload._id: ' + result.payload._id)
         return result.payload._id;
     })
     .then(cid => {
-        fetch(`/api/carts/${cid}/product/${pid}`, {
+        return fetch(`/api/carts/${cid}/product/${pid}`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
@@ -21,6 +23,7 @@ addProductToCart = (pid) => {
     })
     .then(result => result.json())
     .then(result => {
+        
         if(result.status === 'error') throw new Error(result.error);
 
         const Toast = Swal.mixin({
