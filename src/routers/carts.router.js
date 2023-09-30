@@ -185,17 +185,18 @@ router.put('/:cid/product/:pid', async (req, res) =>{
             res.status(400).send({ status: "error", error: "no se encontro el campo quantity" });
         }
 
-        if( quantity !== 'number' ){
+        if( typeof quantity !== 'number' ){
             res.status(400).send({ status: "error", error: "quantity no es un numero" }); 
         }
 
         if( quantity === 0 ){
             res.status(400).send({ status: "error", error: "el campo quantity no puede ser 0" }); 
         }
-        
+        console.log("cart: "+JSON.stringify(cart) );
         cart.products.forEach(pitem =>{
-            if(pitem.product === pid){
+            if(pitem.product == pid){
                 pitem.quantity = quantity;
+                console.log("entre al product == pid");
             }
         });
 
