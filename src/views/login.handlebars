@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-3">
+            <div>
+                <h3>Login</h3>
+                <form action="/api/sessions/login" 
+                        method="post" 
+                        class="d-flex flex-column mb-3 p-2 border rounded" 
+                        id="formLogin">
+                    <p class="mb-1">Email:</p>
+                    <input type="text" name="email">
+                    <p class="mb-1">Contraseña:</p>
+                    <input type="text" name="password">
+                    <button type="submit" id="btnLogin" class="btn btn-primary">Login</button> 
+                    <a href="api/sessions/github">Login with Github</a> 
+                    <a href="/register">Registro</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
